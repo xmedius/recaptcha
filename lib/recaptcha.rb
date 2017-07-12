@@ -46,7 +46,9 @@ module Recaptcha
   def self.get(verify_hash, options)
     http = if Recaptcha.configuration.proxy
       proxy_server = URI.parse(Recaptcha.configuration.proxy)
-      Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
+      proxy_user = CGI.unescape(proxy_server.user) if proxy_server.user
+      proxy_password = CGI.unescape(proxy_server.password) if proxy_server.password
+      Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_user, proxy_password)
     else
       Net::HTTP
     end
